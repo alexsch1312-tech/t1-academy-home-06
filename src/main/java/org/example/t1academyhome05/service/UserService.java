@@ -4,6 +4,7 @@ import org.example.t1academyhome05.entity.User;
 import org.example.t1academyhome05.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +27,11 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    @Transactional
+    public void deleteALL() {
+        userRepository.deleteAll();
+    }
+
     @Transactional(readOnly = true)
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
@@ -40,7 +46,7 @@ public class UserService {
     public void updateUser(Long id, String newUsername) {
         userRepository.findById(id).ifPresent(user -> {
             user.setUsername(newUsername);
-            userRepository.save(user); // На самом деле в транзакции save() вызывать необязательно из-за dirty checking, но оставим для наглядности
+            userRepository.save(user);
         });
     }
 
