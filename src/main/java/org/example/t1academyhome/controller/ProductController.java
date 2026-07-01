@@ -5,7 +5,6 @@ import org.example.t1academyhome.dto.ProductRequestDto;
 import org.example.t1academyhome.dto.ProductResponseDto;
 import org.example.t1academyhome.service.ProductService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,32 +17,31 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<ProductResponseDto> createProduct(@RequestBody ProductRequestDto dto) {
-        return new ResponseEntity<>(productService.createProduct(dto), HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED) // Устанавливает код 201 Created
+    public ProductResponseDto createProduct(@RequestBody ProductRequestDto dto) {
+        return productService.createProduct(dto);
     }
 
-    // GET /api/v1/products
-    // GET /api/v1/products?userId=1
     @GetMapping
-    public ResponseEntity<List<ProductResponseDto>> getProducts(@RequestParam(required = false) Long userId) {
-        return ResponseEntity.ok(productService.getProducts(userId));
+    public List<ProductResponseDto> getProducts(@RequestParam(required = false) Long userId) {
+        return productService.getProducts(userId);
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<ProductResponseDto> getProductById(@PathVariable Long productId) {
-        return ResponseEntity.ok(productService.getProductById(productId));
+    public ProductResponseDto getProductById(@PathVariable Long productId) {
+        return productService.getProductById(productId);
     }
 
     @PutMapping("/{productId}")
-    public ResponseEntity<ProductResponseDto> updateProduct(
+    public ProductResponseDto updateProduct(
             @PathVariable Long productId,
             @RequestBody ProductRequestDto dto) {
-        return ResponseEntity.ok(productService.updateProduct(productId, dto));
+        return productService.updateProduct(productId, dto);
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+    @ResponseStatus(HttpStatus.NO_CONTENT) // Устанавливает код 204 No Content
+    public void deleteProduct(@PathVariable Long productId) {
         productService.deleteProduct(productId);
-        return ResponseEntity.noContent().build();
     }
 }
